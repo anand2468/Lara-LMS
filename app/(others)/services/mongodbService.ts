@@ -3,7 +3,7 @@ import  {MongoClient, ObjectId} from 'mongodb';
 import { generateQuestionsRequest, generateQuestionsResponse } from '../types/testRequest';
 
 // Optimized version with connection pooling for multiple calls
-class MongoService {
+export class MongoService {
     uri:string
     dbName:string
     client?:MongoClient
@@ -47,7 +47,7 @@ class MongoService {
 
       try {
         const questions = await collection.aggregate([
-          { $match: { topic: topic } },
+          { $match: { topic:  new ObjectId( topic )} },
           { $sample: { size: no_of_questions } }
         ]).toArray();
 
@@ -58,7 +58,6 @@ class MongoService {
         });
 
       } catch (error) {
-        console.error(`Error for topic ${topic}:`, error);
         output.push({
           topic: topic,
           questions: [],
@@ -99,12 +98,11 @@ async function testWithSampleData() {
   
   try {
     const result = await service.fetchUser("admin@laralms.com");
-    console.log("Test result:", result);
   } finally {
     await service.close();
   }
 }
 
-testWithSampleData()
+// testWithSampleData()
 
-module.exports = {MongoService}
+// module.exports = {MongoService}
