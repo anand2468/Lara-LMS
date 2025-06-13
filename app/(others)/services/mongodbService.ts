@@ -35,19 +35,22 @@ export class MongoService {
   }
 
   async fetchRandomQuestions(inputArray:generateQuestionsRequest[]):Promise<generateQuestionsResponse[]> {
+    if (!inputArray){
+      return []
+    }
     const collection = await this.connect();
     const output:generateQuestionsResponse[] = [];
 
     for (const entry of inputArray) {
-      const { topic, no_of_questions } = entry;
+      const { _id, no_of_questions, topic} = entry;
 
-      if (!topic || !no_of_questions || no_of_questions <= 0 || no_of_questions > 25) {
+      if (!_id || !no_of_questions || no_of_questions <= 0 || no_of_questions > 25) {
         continue;
       }
 
       try {
         const questions = await collection.aggregate([
-          { $match: { topic:  new ObjectId( topic )} },
+          { $match: { topic:  new ObjectId( _id )} },
           { $sample: { size: no_of_questions } }
         ]).toArray();
 

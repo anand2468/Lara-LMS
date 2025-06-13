@@ -9,10 +9,8 @@ export async function POST(req:NextRequest){
     const body =await req.json()
     const {topics} = body
     const ques =await mongo.fetchRandomQuestions(topics)
-    // console.log(topics, ques, body);
 
     mongo.collectionName = 'tests'
-
     try{
         const client = await mongo.connect();
         const res = await client.insertOne({
@@ -25,5 +23,4 @@ export async function POST(req:NextRequest){
     }finally{
         mongo.close()
     }
-    
 }

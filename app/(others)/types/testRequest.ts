@@ -1,4 +1,5 @@
 export interface generateQuestionsRequest{
+    _id:string
     topic:string,
     no_of_questions:number
 }
