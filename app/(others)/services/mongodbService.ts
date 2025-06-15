@@ -34,12 +34,12 @@ export class MongoService {
     }
   }
 
-  async fetchRandomQuestions(inputArray:generateQuestionsRequest[]):Promise<generateQuestionsResponse[]> {
+  async fetchRandomQuestions(inputArray:generateQuestionsRequest[]):Promise<any[]> {
     if (!inputArray){
       return []
     }
     const collection = await this.connect();
-    const output:generateQuestionsResponse[] = [];
+    const output:any[] = [];
 
     for (const entry of inputArray) {
       const { _id, no_of_questions, topic} = entry;
@@ -54,21 +54,48 @@ export class MongoService {
           { $sample: { size: no_of_questions } }
         ]).toArray();
 
-        output.push({
-          topic: topic,
-          questions: questions.map(q => q._id),
-          answers: questions.map(q => q.answer)
-        });
+        // output.push({
+        //   topic: topic,
+        //   questions: questions.map(q => q._id.toString()),
+        //   answers: questions.map(q => q.answer)
+        // });
+
+        questions.map(q => output.push({...q, topic:topic, _id:q._id.toString()} ))
 
       } catch (error) {
-        output.push({
-          topic: topic,
-          questions: [],
-          answers: []
-        });
+        console.log(error )
       }
     }
+    return output;
+  }
 
+
+  async GenQuestions(inputArray:{_id:string, no_of_questions:number, topic:string}[]):Promise<any[]> {
+    if (!inputArray){
+      return []
+    }
+    const collection = await this.connect();
+    const output:any[] = [];
+
+    for (const entry of inputArray) {
+      const { _id, no_of_questions, topic} = entry;
+
+      if (!_id || !no_of_questions || no_of_questions <= 0 || no_of_questions > 25) {
+        continue;
+      }
+
+      try {
+        const questions = await collection.aggregate([
+          { $match: { topic:  new ObjectId( _id )} },
+          { $sample: { size: no_of_questions } }
+        ]).toArray();
+
+        console.log(questions)
+
+        questions.map(q => output.push({...q, topic:topic, _id:q._id.toString()} ))
+      } catch (error) {
+      }
+    }
     return output;
   }
 
@@ -83,8 +110,8 @@ export class MongoService {
 // Test function to verify the schema
 async function testWithSampleData() {
   const inputArray = [
-    { "topic": "old", "no_of_questions": 5 },
-    { "topic": "new", "no_of_questions": 5 }
+    { "topic": "old", "no_of_questions": 5, "_id":"684a642284d2d35fee911b58" },
+    { "topic": "new", "no_of_questions": 5, "_id":"684a643a84d2d35fee911b59"}
   ];
   const userdata = {"email": "admin@laralms.com"}
 
@@ -100,7 +127,8 @@ async function testWithSampleData() {
   const service = new MongoService("mongodb://localhost:27017", "lara-lms", "users");
   
   try {
-    const result = await service.fetchUser("admin@laralms.com");
+    const result = await service.GenQuestions(inputArray)
+    console.log(result);
   } finally {
     await service.close();
   }

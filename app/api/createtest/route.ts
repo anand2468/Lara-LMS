@@ -15,8 +15,11 @@ export async function POST(req:NextRequest){
         const client = await mongo.connect();
         const res = await client.insertOne({
             ...body,
+            "start":new Date(body.start),
+            "end": new Date(body.end),
             questions:ques
         })
+        console.log(res.insertedId, mongo.collectionName, mongo.dbName)
         return res? new NextResponse(JSON.stringify({"status":"success"})): new NextResponse(JSON.stringify({"status":"fail"}))
     }catch(error:any){
         return new NextResponse(JSON.stringify({'status':"error"}));

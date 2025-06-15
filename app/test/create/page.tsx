@@ -1,10 +1,12 @@
 "use client";
+import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface FormData{
   title:string,
   start:string,
   end:string,
+  duration:number
 }
 interface topicData{
   _id:string,
@@ -13,7 +15,7 @@ interface topicData{
 }
 
 export default function CreateTest() {
-  const [formdata, setformdata] = useState<FormData>({ title:"", start:"2025-06-13T20:50", end:"2025-06-13T20:50"} as FormData)
+  const [formdata, setformdata] = useState<FormData>({ title:"", start:"2025-06-13T20:50", end:"2025-06-13T20:50", duration:30} as FormData)
   const [topicList, setTopicList] = useState<topicData[]>([])
   const [selectedTopics, setSelectedTopics] = useState<topicData[]>([])
 
@@ -40,7 +42,12 @@ export default function CreateTest() {
         body:JSON.stringify({...formdata, topics:selectedTopics})
       })
       const data = await res.json()
-    console.log(data)
+    if(data.status == "success"){
+      alert("test created successfully")
+      return redirect('/')
+    }else{
+      alert('error occurred creating test try again')
+    }
 
     // console.log({...formdata, topics:selectedTopics})
   }
@@ -67,6 +74,10 @@ export default function CreateTest() {
         <br />
         <label htmlFor="endtime">end time</label>
         <input type="datetime-local" name="end" value={formdata.end} onChange={handlechange} id="enddate" />
+
+        <br />
+        <label htmlFor="duration">exam duration (mins):</label>
+        <input type="number" value={formdata.duration} onChange={(e)=> setformdata(prev=> ({...prev, duration:Number(e.target.value)}))} name="duration" id="duration" />
 
         <br />
         <h1> select topics: </h1>

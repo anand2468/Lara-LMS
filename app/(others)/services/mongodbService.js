@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,6 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MongoService = void 0;
 //const { MongoClient, ObjectId } = require("mongodb");
 var mongodb_1 = require("mongodb");
 // Optimized version with connection pooling for multiple calls
@@ -91,10 +103,14 @@ var MongoService = /** @class */ (function () {
     };
     MongoService.prototype.fetchRandomQuestions = function (inputArray) {
         return __awaiter(this, void 0, void 0, function () {
-            var collection, output, _i, inputArray_1, entry, topic, no_of_questions, questions, error_2;
+            var collection, output, _i, inputArray_1, entry, _id, no_of_questions, topic, questions, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.connect()];
+                    case 0:
+                        if (!inputArray) {
+                            return [2 /*return*/, []];
+                        }
+                        return [4 /*yield*/, this.connect()];
                     case 1:
                         collection = _a.sent();
                         output = [];
@@ -103,28 +119,27 @@ var MongoService = /** @class */ (function () {
                     case 2:
                         if (!(_i < inputArray_1.length)) return [3 /*break*/, 7];
                         entry = inputArray_1[_i];
-                        topic = entry.topic, no_of_questions = entry.no_of_questions;
-                        if (!topic || !no_of_questions || no_of_questions <= 0 || no_of_questions > 25) {
+                        _id = entry._id, no_of_questions = entry.no_of_questions, topic = entry.topic;
+                        if (!_id || !no_of_questions || no_of_questions <= 0 || no_of_questions > 25) {
                             return [3 /*break*/, 6];
                         }
                         _a.label = 3;
                     case 3:
                         _a.trys.push([3, 5, , 6]);
                         return [4 /*yield*/, collection.aggregate([
-                                { $match: { topic: topic } },
+                                { $match: { topic: new mongodb_1.ObjectId(_id) } },
                                 { $sample: { size: no_of_questions } }
                             ]).toArray()];
                     case 4:
                         questions = _a.sent();
                         output.push({
                             topic: topic,
-                            questions: questions.map(function (q) { return q._id; }),
+                            questions: questions.map(function (q) { return q._id.toString(); }),
                             answers: questions.map(function (q) { return q.answer; })
                         });
                         return [3 /*break*/, 6];
                     case 5:
                         error_2 = _a.sent();
-                        console.error("Error for topic ".concat(topic, ":"), error_2);
                         output.push({
                             topic: topic,
                             questions: [],
@@ -135,6 +150,64 @@ var MongoService = /** @class */ (function () {
                         _i++;
                         return [3 /*break*/, 2];
                     case 7: return [2 /*return*/, output];
+                }
+            });
+        });
+    };
+    MongoService.prototype.GenQuestions = function (inputArray) {
+        return __awaiter(this, void 0, void 0, function () {
+            var collection, output, _loop_1, _i, inputArray_2, entry;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!inputArray) {
+                            return [2 /*return*/, []];
+                        }
+                        return [4 /*yield*/, this.connect()];
+                    case 1:
+                        collection = _a.sent();
+                        output = [];
+                        _loop_1 = function (entry) {
+                            var _id, no_of_questions, topic, questions, error_3;
+                            return __generator(this, function (_b) {
+                                switch (_b.label) {
+                                    case 0:
+                                        _id = entry._id, no_of_questions = entry.no_of_questions, topic = entry.topic;
+                                        if (!_id || !no_of_questions || no_of_questions <= 0 || no_of_questions > 25) {
+                                            return [2 /*return*/, "continue"];
+                                        }
+                                        _b.label = 1;
+                                    case 1:
+                                        _b.trys.push([1, 3, , 4]);
+                                        return [4 /*yield*/, collection.aggregate([
+                                                { $match: { topic: new mongodb_1.ObjectId(_id) } },
+                                                { $sample: { size: no_of_questions } }
+                                            ]).toArray()];
+                                    case 2:
+                                        questions = _b.sent();
+                                        console.log(questions);
+                                        questions.map(function (q) { return output.push(__assign(__assign({}, q), { topic: topic, _id: q._id.toString() })); });
+                                        return [3 /*break*/, 4];
+                                    case 3:
+                                        error_3 = _b.sent();
+                                        return [3 /*break*/, 4];
+                                    case 4: return [2 /*return*/];
+                                }
+                            });
+                        };
+                        _i = 0, inputArray_2 = inputArray;
+                        _a.label = 2;
+                    case 2:
+                        if (!(_i < inputArray_2.length)) return [3 /*break*/, 5];
+                        entry = inputArray_2[_i];
+                        return [5 /*yield**/, _loop_1(entry)];
+                    case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4:
+                        _i++;
+                        return [3 /*break*/, 2];
+                    case 5: return [2 /*return*/, output];
                 }
             });
         });
@@ -157,6 +230,7 @@ var MongoService = /** @class */ (function () {
     };
     return MongoService;
 }());
+exports.MongoService = MongoService;
 // Test function to verify the schema
 function testWithSampleData() {
     return __awaiter(this, void 0, void 0, function () {
@@ -165,18 +239,18 @@ function testWithSampleData() {
             switch (_a.label) {
                 case 0:
                     inputArray = [
-                        { "topic": "old", "no_of_questions": 5 },
-                        { "topic": "new", "no_of_questions": 5 }
+                        { "topic": "old", "no_of_questions": 5, "_id": "684a642284d2d35fee911b58" },
+                        { "topic": "new", "no_of_questions": 5, "_id": "684a643a84d2d35fee911b59" }
                     ];
                     userdata = { "email": "admin@laralms.com" };
                     service = new MongoService("mongodb://localhost:27017", "lara-lms", "users");
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, , 3, 5]);
-                    return [4 /*yield*/, service.fetchUser("admin@laralms.com")];
+                    return [4 /*yield*/, service.GenQuestions(inputArray)];
                 case 2:
                     result = _a.sent();
-                    console.log("Test result:", result);
+                    console.log(result);
                     return [3 /*break*/, 5];
                 case 3: return [4 /*yield*/, service.close()];
                 case 4:
@@ -188,4 +262,4 @@ function testWithSampleData() {
     });
 }
 testWithSampleData();
-module.exports = { MongoService: MongoService };
+// module.exports = {MongoService}
