@@ -40,12 +40,12 @@ export default async function Home() {
           <h1>
             upcoming and ongoing tests
           </h1>
-            {upcomingTests && upcomingTests.map(item => <Link href={`/test/${item._id.toString()}`} key={item.title}> {item.title} </Link>)}
+            {upcomingTests && upcomingTests.map(item => <Link href={`/test/${item._id.toString()}`} key={item._id.toString()}> {item.title} </Link>)}
         </div>
 
         <div>
           <h1>previous tests</h1>
-          {previousTests && previousTests.map(item => <Link href={`/test/${item._id.toString()}`} key={item.title}>{item.title}  </Link>)}
+          {previousTests && previousTests.map(item => <Link href={`/test/${item._id.toString()}`} key={item._id.toString()}>{item.title}  </Link>)}
         </div>
       </main>
     </div>
