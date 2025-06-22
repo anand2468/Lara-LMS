@@ -8,7 +8,7 @@ export class MongoService {
     dbName:string
     client?:MongoClient
     collectionName:string
-  constructor(uri:string = "mongodb://localhost:27017", dbName:string = "lara-lms", collectionName:string = "questions") {
+  constructor(uri:string = process.env.MONGO_URL!! , dbName:string = "lara-lms", collectionName:string = "questions") {
     this.uri = uri;
     this.dbName = dbName;
     this.client = undefined;

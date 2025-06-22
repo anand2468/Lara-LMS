@@ -1,0 +1,18 @@
+[{
+  "_id": {
+    "$oid": "684a642284d2d35fee911b58"
+  },
+  "topic": "old"
+},
+{
+  "_id": {
+    "$oid": "684a643a84d2d35fee911b59"
+  },
+  "topic": "new"
+},
+{
+  "_id": {
+    "$oid": "684a644784d2d35fee911b5a"
+  },
+  "topic": "modern"
+}]
