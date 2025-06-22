@@ -15,7 +15,7 @@ interface topicData{
 }
 
 export default function CreateTest() {
-  const [formdata, setformdata] = useState<FormData>({ title:"", start:"2025-06-13T20:50", end:"2025-06-13T20:50", duration:30} as FormData)
+  const [formdata, setformdata] = useState<FormData>({ title:"", start:new Date().toISOString().slice(0,16), end:new Date().toISOString().slice(0,16), duration:30} as FormData)
   const [topicList, setTopicList] = useState<topicData[]>([])
   const [selectedTopics, setSelectedTopics] = useState<topicData[]>([])
 
@@ -23,7 +23,7 @@ export default function CreateTest() {
     async function  gettopics() {
       const res = await fetch('/api/fetchtopics')
       const data = await res.json()
-      setTopicList(prev => ([...prev , ...data.data]))
+      setTopicList(data.data)
     }
 
     gettopics()

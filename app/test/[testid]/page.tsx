@@ -32,7 +32,7 @@ export default async function TestPage({
 
 
     return <>
-        <h1>welcome to test 1 {testid} </h1>
+        {/* <h1>welcome to test 1 {testid} </h1> */}
         {(new Date(testdetails.end) < new Date())? <TestEnded/> : <ConductTest testdata={testdetails} />}
     </>
 }
