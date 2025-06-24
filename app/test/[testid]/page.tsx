@@ -7,6 +7,12 @@ import ConductTest, { TestData } from "./TestArea";
 //     topic:string
 //     no_of_questions?:number
 // }
+export async function metadata() {
+    return {
+        title: 'Test',
+        description: 'Conduct a test on LARA-LMS',
+    }
+}
 
 export default async function TestPage({
     params

@@ -54,12 +54,6 @@ export class MongoService {
           { $sample: { size: no_of_questions } }
         ]).toArray();
 
-        // output.push({
-        //   topic: topic,
-        //   questions: questions.map(q => q._id.toString()),
-        //   answers: questions.map(q => q.answer)
-        // });
-
         questions.map(q => output.push({...q, topic:topic, _id:q._id.toString()} ))
 
       } catch (error) {
@@ -70,35 +64,6 @@ export class MongoService {
   }
 
 
-  async GenQuestions(inputArray:{_id:string, no_of_questions:number, topic:string}[]):Promise<any[]> {
-    if (!inputArray){
-      return []
-    }
-    const collection = await this.connect();
-    const output:any[] = [];
-
-    for (const entry of inputArray) {
-      const { _id, no_of_questions, topic} = entry;
-
-      if (!_id || !no_of_questions || no_of_questions <= 0 || no_of_questions > 25) {
-        continue;
-      }
-
-      try {
-        const questions = await collection.aggregate([
-          { $match: { topic:  new ObjectId( _id )} },
-          { $sample: { size: no_of_questions } }
-        ]).toArray();
-
-        console.log(questions)
-
-        questions.map(q => output.push({...q, topic:topic, _id:q._id.toString()} ))
-      } catch (error) {
-      }
-    }
-    return output;
-  }
-
   async close() {
     if (this.client) {
       await this.client.close();
@@ -106,34 +71,3 @@ export class MongoService {
     }
   }
 }
-
-// Test function to verify the schema
-async function testWithSampleData() {
-  const inputArray = [
-    { "topic": "old", "no_of_questions": 5, "_id":"684a642284d2d35fee911b58" },
-    { "topic": "new", "no_of_questions": 5, "_id":"684a643a84d2d35fee911b59"}
-  ];
-  const userdata = {"email": "admin@laralms.com"}
-
-  // This would work with your sample document:
-  // {
-  //   "_id": ObjectId("..."),
-  //   "question": "what comes next 1, 2, 3, 4, 5, 6 ?",
-  //   "options": ["7", "10", "9", "11"],
-  //   "answer": "7",
-  //   "topic": "series"
-  // }
-
-  const service = new MongoService("mongodb://localhost:27017", "lara-lms", "users");
-  
-  try {
-    const result = await service.GenQuestions(inputArray)
-    console.log(result);
-  } finally {
-    await service.close();
-  }
-}
-
-// testWithSampleData()
-
-// module.exports = {MongoService}

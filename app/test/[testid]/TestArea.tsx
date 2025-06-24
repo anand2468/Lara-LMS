@@ -40,6 +40,8 @@ export default function ConductTest({testdata}:{testdata:TestData}) {
     const [currquestion, setcurrquestion] = useState<Qdata>(sidequestions[0])
     const [answers, setanswers] = useState<{[key:string]:string}>({})
     const [curTheme, setcurTheme] = useState<string>("dark")
+    const [user, setuser] = useState<any>(null)
+
 
     useEffect(()=>{
         setcurrquestion(sidequestions[0])
@@ -60,6 +62,7 @@ export default function ConductTest({testdata}:{testdata:TestData}) {
 
     const handleSelectOption = (qid:string,option:string)=>{
         setanswers(prev=>({...prev, [qid]:option}))
+        localStorage.setItem("answers", JSON.stringify(answers));
         // setquestions(prev => prev.map(q=> q._id == currquestion._id ? {...q, "selected":value}: q ))
         // console.log(value)
     }
@@ -68,11 +71,26 @@ export default function ConductTest({testdata}:{testdata:TestData}) {
         e.preventDefault()
 
         if (Object.keys(answers).length === questions.length || confirm("didnt attempted all questions..")){
-            let result = 0;
+            let result = 0, res:{[key:string]:number} = {};
             questions.map(q => {
                 if (answers[q._id] == q.answer){
                     result += 1;
+                    res[q.topic] = res[q.topic] ? res[q.topic] + 1 : 1;
                 }
+            })
+            fetch(`${window.location.origin}/api/submittest`, {
+                cache: 'no-store',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user: user,
+                    testid: testdata._id,
+                    ...answers,
+                    total: result,
+                    ...res
+                }),
             })
             alert(`test completed you scored ${result} marks` )
             redirect('/')
@@ -84,6 +102,34 @@ export default function ConductTest({testdata}:{testdata:TestData}) {
         (curTheme=="dark")?setcurTheme("light"):setcurTheme("dark")
     }
 
+
+    useEffect(()=>{
+        // check if user is already set
+        let storeduser = localStorage.getItem("user");
+        let storedAnswers = localStorage.getItem("answers");
+        let testid = localStorage.getItem("testid");
+        if (testid && storeduser && storedAnswers && testid == testdata._id){
+            setuser(storeduser);
+            setanswers(JSON.parse(storedAnswers));
+            return;
+        }
+        // if not set, prompt for user name
+        // if user name is not entered, reload the page
+        // if user name is entered, set the user state
+        // and continue with the test
+        const user = prompt("enter your name to start the test");
+        if (user){
+            setuser(user);
+            localStorage.setItem("user", user);
+            localStorage.setItem("answers", JSON.stringify({}));
+            localStorage.setItem("testid", testdata._id);
+        }else{
+            alert("you must enter your name to start the test");
+            location.reload();
+        }
+    }
+    , [])
+
     return <div className={`${styles.bg} ${(curTheme=="light")?styles.themeWhiteBg:""}`}>
                 <div className={`${styles.ellipse1} ${(curTheme=="light")?styles.lightThemeEllipse1:""}`}></div>
                 <div className={`${styles.ellipse3} ${(curTheme=="light")?styles.lightThemeEllipse3:""}`}></div>
@@ -93,7 +139,8 @@ export default function ConductTest({testdata}:{testdata:TestData}) {
                         {
                             (curTheme=="dark")?<MdOutlineLightMode  className={styles.lightThemeIcon} onClick={()=>updateTheme()} />:<IoMoonOutline   className={styles.darkThemeIcon}  onClick={()=>updateTheme()} />
                         }
-                        
+                        <button className={styles.nextButton} type="submit" style={{zIndex:999}} onClick={handleSubmit}>submit</button>
+
                     </div>
                     
                     
@@ -113,11 +160,11 @@ export default function ConductTest({testdata}:{testdata:TestData}) {
                         {/* display side nav */}
                         <div className={(curTheme=="light")?`${styles.sideQuestionNav} ${styles.themeWhiteBg}`:`${styles.sideQuestionNav}`} >
                             <TopicBar topics={testdata.topics} changeTopic={handlechangetopic} currtopic={currtopic}/>
-                            <QuestionList questions={sidequestions} changeQuestion={handleSelectQuestion} currquestion={currquestion}/>
+                            <QuestionList answers={answers} questions={sidequestions} changeQuestion={handleSelectQuestion} currquestion={currquestion}/>
                         </div>
                     </div>
                     <div>
-                        <button className={styles.nextButton} type="submit" onClick={handleSubmit}>submit</button>
+                        
                     </div>
                 </div>
             </div>
@@ -132,30 +179,13 @@ function TopicBar({topics, changeTopic, currtopic}:{topics:Tdata[], changeTopic:
     {topics.map(t => <button key={t._id} className={(currtopic == t.topic) ? `${styles.sideDivTopic} m-2 p-2  border rounded-2xl`:'m-2 p-2'}  onClick={()=> changeTopic(t.topic)}>{t.topic}</button>)}</ div> 
 }
 
-function QuestionList({questions, changeQuestion, currquestion}:{questions:Qdata[]; changeQuestion:any, currquestion:Qdata}){
+function QuestionList({questions, changeQuestion, currquestion, answers}:{questions:Qdata[]; changeQuestion:any, currquestion:Qdata, answers:any}){
     return <div className="flex flex-wrap">
-        {questions.map((q,ind)=> <div key={ind} className={(currquestion._id == q._id)?`${styles.sideDivQuesNo}   border p-2 m-2 rounded-full` :`${styles.sideDivQuesNo} !bg-white border p-2 m-2 rounded-full`} onClick={()=>changeQuestion(q._id)}> {ind +1} </div> )}
+        {questions.map((q,ind)=> <div key={ind} className={(currquestion._id == q._id || answers[q._id]!==undefined)?`${styles.sideDivQuesNo} border p-2 m-2 rounded-full` :`${styles.sideDivQuesNo} !bg-white border p-2 m-2 rounded-full`} onClick={()=>changeQuestion(q._id)}> {ind +1} </div> )}
     </div>
 }
 
 function CurrentQuestion({question, changeOption, answers, curTheme}:{question:Qdata, changeOption:any, answers:any, curTheme:string}){
-    const [selected, setselected] = useState<string|null>(null)
-    const [presentoption, setpresentoption] = useState<number>()
-    // useEffect(()=>{
-    //     function addOption(){
-    //         changeOption(selected)
-    //     }
-    //     return addOption()
-    // })
-    // const handlechange = (value:string)=>{
-    //     setselected(value)
-    //     // changeOption(value)
-    // }
-
-    const optionChosen = (ind:number):void =>{
-        setpresentoption(ind)
-    }
-
 
     return <>
         <div className={`${styles.questionDiv} ${(curTheme=="light")?styles.themeWhiteBg:""}`}>
@@ -167,13 +197,12 @@ function CurrentQuestion({question, changeOption, answers, curTheme}:{question:Q
                 </div>
                 {/*<p className={`${styles.difficultyText} ${styles.themeWhiteText}`}>Medium</p>*/}
             </div>
-            <h1 className={styles.questionText}> {question.question} {question._id} {question.topic}</h1>
+            <h1 className={styles.questionText}> {question.question}</h1>
         </div>
         <div >
             {question.options.map((o, ind) => <section key={ind}>
-                <div className={curTheme=="light"?(presentoption==ind)?`${styles.optionDiv} ${styles.themeUnimportantWhite} ${styles.ThemedselectedQuestionTheme}`:`${styles.optionDiv} ${styles.themeWhiteBg}`:(presentoption==ind)?`${styles.optionDiv} ${styles.selectedQuestionTheme}`:`${styles.optionDiv}`}  onClick={() => optionChosen(ind)}>
-                    
-                    <input className={styles.radioButton}  type="radio" checked={answers[question._id] == o?true:false} name={`option${question._id}`} id={`option${question._id}${ind}`} value={o} onChange={()=>changeOption(question._id, o)}/> 
+                <div className={curTheme=="light"?(answers[question._id] == o)?`${styles.optionDiv} ${styles.themeUnimportantWhite} ${styles.ThemedselectedQuestionTheme}`:`${styles.optionDiv} ${styles.themeWhiteBg}`:(answers[question._id] == o)?`${styles.optionDiv} ${styles.selectedQuestionTheme}`:`${styles.optionDiv}`}  onClick={()=>changeOption(question._id, o)}>
+                    <input className='hidden m-2' type="radio" checked={answers[question._id] == o?true:false} name={`option${question._id}`} id={`option${question._id}${ind}`} value={o} onChange={()=>changeOption(question._id, o)}/> 
                     <label htmlFor={`option${ind}`}>{o}</label>
                 </div></section> )}
         </div>

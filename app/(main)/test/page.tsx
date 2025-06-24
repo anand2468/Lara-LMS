@@ -1,6 +1,7 @@
 'use server';
 import Link from "next/link";
 import { MongoService } from "../../(others)/services/mongodbService";
+import { headers } from "next/headers";
 
 export default async function Home() {
   /*
@@ -10,22 +11,14 @@ export default async function Home() {
   2. create test button along with upcomming tests
   3. already completed tests 
   */
-  const mongo = new MongoService();
-  mongo.collectionName = 'tests'
-  const client = await mongo.connect()
-  let previousTests:any[] = []
-  let upcomingTests:any[] = []
+  const host = (await headers()).get('host')
+  const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
+  const res= await fetch(`${protocol}://${host}/api/gettests`, {
+    cache: 'no-store',
+  });
+  const data:{previousTests:any[], upcomingTests:any[] }  = await res.json();
+  const { previousTests, upcomingTests } = data
 
-  try{
-    let data = await client.find({  end: { $lt: new Date()}}).toArray()
-    previousTests = data
-    data = await client.find({  end: { $gt: new Date()}}).toArray()
-    upcomingTests = data 
-  }catch(err:any){
-    console.log('error fething data')
-  }finally{
-    mongo.close()
-  }
 
   return (
     <div className="p-[48px] w-full h-full">

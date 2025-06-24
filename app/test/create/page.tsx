@@ -14,6 +14,7 @@ interface topicData{
   no_of_questions?:number
 }
 
+
 export default function CreateTest() {
   const [formdata, setformdata] = useState<FormData>({ title:"", start:new Date().toISOString().slice(0,16), end:new Date().toISOString().slice(0,16), duration:30} as FormData)
   const [topicList, setTopicList] = useState<topicData[]>([])
@@ -21,7 +22,9 @@ export default function CreateTest() {
 
   useEffect(()=>{
     async function  gettopics() {
-      const res = await fetch('/api/fetchtopics')
+      const res = await fetch(`${window.location.origin}/api/fetchtopics`, {
+        cache: 'no-store',
+      })
       const data = await res.json()
       setTopicList(data.data)
     }
@@ -37,7 +40,7 @@ export default function CreateTest() {
     }
     let empty = selectedTopics.filter(t => (t.no_of_questions))
     if (selectedTopics.length != empty.length) {alert("selected questions must not be zero"); return}
-    const res = await fetch('http://localhost:3000/api/createtest', 
+    const res = await fetch(`${window.location.origin}/api/createtest`, 
       {method:"POST", 
         body:JSON.stringify({...formdata, topics:selectedTopics})
       })
