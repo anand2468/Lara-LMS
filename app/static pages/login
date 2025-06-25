@@ -1,0 +1,14 @@
+<div class="lg:grid lg:grid-cols-2 h-[100vh]">
+  <div class="lg:bg-purple-200 flex justify-center lg:items-center sm:mt-[220px] lg:mt-0">
+    <h1 class="text-5xl m-2 font-bold text-purple-800 "> LARA-LMS </h1>
+  </div>
+  <div class="flex justify-center lg:items-center sm:h-[100vh] md:h-[100vh]lg:mt-0 ">
+    <form class=" lg:w-[70%] w-[400px]">
+      <h1 class="lg:text-2xl text-xl font-bold text-center">WELCOME BACK </h1>
+      <p class="mt-10 ml-2 ">enter your email and password</p>
+      <input class="p-2 m-2 w-full border border-purple-800 rounded-md" type="text" name="username" id="username" placeholder="usename"> <br>
+      <input class="p-2 m-2 w-full border border-purple-800 rounded-md" type="text" name="username" id="username" placeholder="usename"> <br>
+      <input class="w-full m-2 p-2 bg-purple-600 rounded-md text-white text-xl active:bg-purple-700" type="button" value="login">
+    </form>
+  </div>
+</div>

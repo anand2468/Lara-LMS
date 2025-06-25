@@ -2,131 +2,342 @@
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"a", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"b", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"a", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"d", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"c", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"d", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"b", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"b", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"d", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"c", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"a", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"a", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"b", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"a", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"d", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"c", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"d", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"b", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"b", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"d", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"c", 
-    "topic":"old"
+    "topic":"modern"
 },
 {
     "question":"choose one option",
     "options":["a", "b", "c", "d"],
     "answer":"a", 
-    "topic":"old"
-}]
+    "topic":"modern"
+},
+
+
+
+{
+    "_id": {
+      "$oid": "68483590b1748fb6f2cf1b05"
+    },
+    "title": "sample-test-1",
+    "start": {
+      "$date": "2025-06-10T15:00:00.000Z"
+    },
+    "end": {
+      "$date": "2025-06-10T15:30:00.000Z"
+    },
+    "topics": [
+      "old"
+    ],
+    "questions": {
+      "old": [
+        {
+          "$oid": "6846a41c35bdbc8299283b3f"
+        },
+        {
+          "$oid": "6846a41c35bdbc8299283b40"
+        },
+        {
+          "$oid": "6846a41c35bdbc8299283b4c"
+        },
+        {
+          "$oid": "6846a41c35bdbc8299283b51"
+        },
+        {
+          "$oid": "6846a41c35bdbc8299283b53"
+        }
+      ]
+    },
+    "answers": [
+      "a",
+      "b",
+      "a",
+      "b",
+      "c"
+    ],
+    "records": []
+  }
+,
+
+
+{
+    "_id": {
+      "$oid": "684c38ba60690f7ee268ba50"
+    },
+    "title": "sample1",
+    "start": {
+      "$date": "2025-06-13T14:39:26.000Z"
+    },
+    "end": {
+      "$date": "2025-06-13T14:39:26.000Z"
+    },
+    "topics": [
+      {
+        "_id": "684a642284d2d35fee911b58",
+        "topic": "old",
+        "no_of_questions": 5
+      },
+      {
+        "_id": "684a643a84d2d35fee911b59",
+        "topic": "new",
+        "no_of_questions": 5
+      }
+    ],
+    "questions": [
+      {
+        "topic": "old",
+        "questions": [
+          {
+            "$oid": "6846a41c35bdbc8299283b43"
+          },
+          {
+            "$oid": "6846a41c35bdbc8299283b4c"
+          },
+          {
+            "$oid": "6846a41c35bdbc8299283b54"
+          },
+          {
+            "$oid": "6846a41c35bdbc8299283b4e"
+          },
+          {
+            "$oid": "6846a41c35bdbc8299283b41"
+          }
+        ],
+        "answers": [
+          "c",
+          "a",
+          "a",
+          "c",
+          "a"
+        ]
+      },
+      {
+        "topic": "new",
+        "questions": [
+          {
+            "$oid": "684482a5075a2765c4ef2522"
+          },
+          {
+            "$oid": "684482a5075a2765c4ef2513"
+          },
+          {
+            "$oid": "684482a5075a2765c4ef2518"
+          },
+          {
+            "$oid": "684482a5075a2765c4ef2516"
+          },
+          {
+            "$oid": "684482a5075a2765c4ef250f"
+          }
+        ],
+        "answers": [
+          "c",
+          "d",
+          "a",
+          "d",
+          "b"
+        ]
+      }
+    ]
+  },
+
+{
+    "msg ":"schema",
+    "$jsonSchema": {
+      "bsonType": "object",
+      "required": [
+        "_id",
+        "title",
+        "start",
+        "end",
+        "duration",
+        "topics",
+        "questions"
+      ],
+      "properties": {
+        "_id": {
+          "bsonType": "objectId"
+        },
+        "title": {
+          "bsonType": "string"
+        },
+        "start": {
+          "bsonType": "date"
+        },
+        "end": {
+          "bsonType": "date"
+        },
+        "duration": {
+          "bsonType": "int"
+        },
+        "topics": {
+          "bsonType": "array",
+          "items": {
+            "bsonType": "object",
+            "properties": {
+              "_id": {
+                "bsonType": "objectId"
+              },
+              "no_of_questions": {
+                "bsonType": "int"
+              },
+              "topic": {
+                "bsonType": "string"
+              }
+            },
+            "required": [
+              "_id",
+              "no_of_questions",
+              "topic"
+            ]
+          }
+        },   
+        "questions": {
+          "bsonType": "array",
+          "items": {
+            "bsonType": "object",
+            "properties": {
+              "topic": {
+                "bsonType": "string"
+              },
+              "questions": {
+                "bsonType": "array",
+                "items": {
+                  "bsonType": "objectId"
+                }
+              },
+              "answers": {
+                "bsonType": "array",
+                "items": {
+                  "bsonType": "string"
+                }
+              }
+            },
+            "required": [
+              "answers",
+              "questions",
+              "topic"
+            ]
+          }
+        }
+      }
+    }
+  }]
