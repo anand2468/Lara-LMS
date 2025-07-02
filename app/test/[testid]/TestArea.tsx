@@ -1,6 +1,6 @@
 "use client";
 import { redirect } from "next/navigation";
-import { useEffect, useState } from "react"
+import { use, useEffect, useState } from "react"
 import { MdOutlineLightMode } from "react-icons/md";
 import { IoMoonOutline } from "react-icons/io5";
 
@@ -31,16 +31,24 @@ export interface TestData{
     questions:Qdata[]
 }
 
+function shuffle(questions:any[]):any[]{
+    for (let i = questions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [questions[i], questions[j]] = [questions[j], questions[i]];
+    }
+    return questions;
+}
 
 
 export default function ConductTest({testdata}:{testdata:TestData}) {
-    const [questions, setquestions] = useState<Qdata[]>(testdata.questions)
+    const [questions, setquestions] = useState<Qdata[]>(shuffle(testdata.questions))
     const [currtopic, setcurrtopic] = useState<string>(testdata.topics[0].topic)
     const [sidequestions, setsidequestions] = useState<Qdata[]>(questions.filter(q => (q.topic == currtopic)))
     const [currquestion, setcurrquestion] = useState<Qdata>(sidequestions[0])
     const [answers, setanswers] = useState<{[key:string]:string}>({})
     const [curTheme, setcurTheme] = useState<string>("dark")
     const [user, setuser] = useState<any>(null)
+    const [timer, setTimer] = useState<number>(testdata.duration ? parseInt(testdata.duration)*30 : 1800);
 
 
     useEffect(()=>{
@@ -49,6 +57,40 @@ export default function ConductTest({testdata}:{testdata:TestData}) {
     useEffect(()=>{
         setsidequestions(questions.filter(q => (q.topic == currtopic)))
     }, [currtopic])
+    useEffect(()=>{
+        if (timer <= 0) {
+            alert("Time's up! Submitting your test.");
+            let result = 0, res:{[key:string]:number} = {};
+            questions.map(q => {
+                if (answers[q._id] == q.answer){
+                    result += 1;
+                    res[q.topic] = res[q.topic] ? res[q.topic] + 1 : 1;
+                }
+            })
+            fetch(`${window.location.origin}/api/submittest`, {
+                cache: 'no-store',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user: user,
+                    testid: testdata._id,
+                    ...answers,
+                    total: result,
+                    ...res
+                }),
+            })
+            alert(`test completed you scored ${result} marks` )
+            localStorage.clear();
+            redirect('/')
+        }
+        let interval = setInterval(() => {
+            setTimer(prev => prev-1)
+        }, 1000);
+
+        return () => clearInterval(interval)
+    }, [timer])
 
     const handlechangetopic =(topic:string)=>{
         if (topic == currtopic) return;
@@ -93,6 +135,7 @@ export default function ConductTest({testdata}:{testdata:TestData}) {
                 }),
             })
             alert(`test completed you scored ${result} marks` )
+            localStorage.clear();
             redirect('/')
         }
     }
@@ -108,9 +151,13 @@ export default function ConductTest({testdata}:{testdata:TestData}) {
         let storeduser = localStorage.getItem("user");
         let storedAnswers = localStorage.getItem("answers");
         let testid = localStorage.getItem("testid");
+        
         if (testid && storeduser && storedAnswers && testid == testdata._id){
+            let starttime:string = localStorage.getItem("starttime")!!
+            let completedtime = new Date().getTime()-new Date(starttime).getTime()
             setuser(storeduser);
             setanswers(JSON.parse(storedAnswers));
+            setTimer(parseInt(testdata.duration) * 60 -  (Math.trunc(completedtime/1000)))
             return;
         }
         // if not set, prompt for user name
@@ -123,6 +170,7 @@ export default function ConductTest({testdata}:{testdata:TestData}) {
             localStorage.setItem("user", user);
             localStorage.setItem("answers", JSON.stringify({}));
             localStorage.setItem("testid", testdata._id);
+            localStorage.setItem("starttime", new Date().toLocaleString())
         }else{
             alert("you must enter your name to start the test");
             location.reload();
@@ -154,7 +202,7 @@ export default function ConductTest({testdata}:{testdata:TestData}) {
                                 <p className={(curTheme=="light")?`${styles.completedPercentage}  ${styles.themeBlackText}`:`${styles.completedPercentage}`}>20% Completed</p>
                             </div>
                             <div className={(curTheme=="light")?`${styles.completedCountBar} ${styles.themeBlackBg}`:`${styles.completedCountBar}`}></div>
-                            <CurrentQuestion question={currquestion} changeOption={handleSelectOption} answers={answers} curTheme={curTheme}/>
+                            <CurrentQuestion question={currquestion} changeOption={handleSelectOption} answers={answers} curTheme={curTheme} time={timer}/>
                         </div>
 
                         {/* display side nav */}
@@ -185,7 +233,7 @@ function QuestionList({questions, changeQuestion, currquestion, answers}:{questi
     </div>
 }
 
-function CurrentQuestion({question, changeOption, answers, curTheme}:{question:Qdata, changeOption:any, answers:any, curTheme:string}){
+function CurrentQuestion({question, changeOption, answers, curTheme, time}:{question:Qdata, changeOption:any, answers:any, curTheme:string, time:number}){
 
     return <>
         <div className={`${styles.questionDiv} ${(curTheme=="light")?styles.themeWhiteBg:""}`}>
@@ -193,7 +241,7 @@ function CurrentQuestion({question, changeOption, answers, curTheme}:{question:Q
                 {/*<p className={styles.pointsDiv}>1 point</p>*/}
                 <div className={styles.imgTimeDiv}>
                     <img className={styles.timerImg} src="https://iili.io/Fny4bLX.png"/>
-                    <p className={styles.timer} >00:00</p>
+                    <p className={styles.timer} >{`${Math.floor(time/60)}:${time%60}`} </p>
                 </div>
                 {/*<p className={`${styles.difficultyText} ${styles.themeWhiteText}`}>Medium</p>*/}
             </div>
