@@ -7,7 +7,7 @@ import { IoMoonOutline } from "react-icons/io5";
 import styles from './TestArea.module.css';
 
 
-interface Qdata{
+export interface Qdata{
     _id:string,
     question:string,
     options:string[],
@@ -15,7 +15,7 @@ interface Qdata{
     topic:string,
     selected?:string
 }
-interface Tdata{
+export interface Tdata{
     _id:string,
     topic:string,
     no_of_questions:number

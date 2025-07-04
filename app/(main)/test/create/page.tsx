@@ -63,6 +63,7 @@ export default function CreateTest() {
     }))
   }
   return (
+  <div className="flex h-[100vh] justify-center items-center">
     <div className="w-[80%] rounded-md border-t-4 border-t-purple-400 shadow-xl p-[24px] m-auto lg:w-[600px] bg-gray-50 mt-[100px]" >
       <div className="border-b p-3">
         <h1 className="text-4xl">Create Test</h1>
@@ -123,6 +124,7 @@ export default function CreateTest() {
         <input className="w-full bg-purple-600 p-2 rounded-md text-xl  mb-5 text-white" type="submit" value="submit" />
       </form>
     </div>
+  </div>
   );
 }
 let res = <div className="w-[80%] rounded-md shadow-xl p-[24px] m-auto lg:w-[600px]">

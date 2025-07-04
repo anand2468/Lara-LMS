@@ -1,12 +1,9 @@
 import { MongoService } from "@/app/(others)/services/mongodbService";
 import { ObjectId } from "mongodb";
 import ConductTest, { TestData } from "./TestArea";
+import Dashboard from "./Dashboard";
 
-// export interface topicData{
-//     _id:string,
-//     topic:string
-//     no_of_questions?:number
-// }
+
 export async function metadata() {
     return {
         title: 'Test',
@@ -36,14 +33,8 @@ export default async function TestPage({
 
     testdetails = {...testdetails, _id: testdetails._id.toString()}
 
-
-    return <>
-        {/* <h1>welcome to test 1 {testid} </h1> */}
-        {(new Date(testdetails.end) < new Date())? <TestEnded/> : <ConductTest testdata={testdetails} />}
-    </>
+    if ( new Date() > new Date(testdetails.end)){
+        return <Dashboard testid={testid} topics={testdetails.topics} title={testdetails.title} />
+    }
+    return <ConductTest testdata={testdetails} />
 }
-
-
-
-const TestEnded =()=> <h1> test ended</h1>
-const TestNotEnded = ()=> <h1>test not ended</h1>

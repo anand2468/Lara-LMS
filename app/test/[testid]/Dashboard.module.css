@@ -1,0 +1,307 @@
+/* 
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+} */
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+.header {
+    /* background: linear-gradient(135deg, #8B5CF6 0%, #A855F7 50%, #C084FC 100%); */
+    padding: 30px;
+    text-align: center;
+    position: relative;
+}
+
+.back-button {
+    position: absolute;
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.9);
+    color: #8B5CF6;
+    transform: translateY(-50%) translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.title {
+    color: white;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.subTitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    font-weight: 400;
+}
+
+.contentWrapper {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 30px;
+    padding: 30px;
+}
+
+.tableSection {
+    overflow-x: auto;
+}
+
+.charts-section {
+    background: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%);
+    padding: 25px;
+    border-radius: 12px;
+    border: 2px solid rgba(139, 92, 246, 0.2);
+    box-shadow: 0 10px 25px rgba(139, 92, 246, 0.1);
+}
+
+.chart-container {
+    margin-bottom: 30px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(139, 92, 246, 0.1);
+}
+
+.chart-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #6B46C1;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.chart-canvas {
+    max-height: 200px;
+}
+
+.resultsTable {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(139, 92, 246, 0.15);
+}
+
+.resultsTable thead {
+    background: linear-gradient(135deg, #8B5CF6 0%, #A855F7 100%);
+}
+
+.resultsTable th {
+    padding: 18px 12px;
+    text-align: left;
+    font-weight: 700;
+    color: white;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.resultsTable th:first-child {
+    text-align: center;
+    width: 70px;
+}
+
+.resultsTable th:nth-child(3),
+.resultsTable th:nth-child(4),
+.resultsTable th:nth-child(5) {
+    text-align: center;
+    width: 90px;
+}
+
+.resultsTable tbody tr {
+    border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.resultsTable tbody tr:nth-child(even) {
+    background: rgba(139, 92, 246, 0.02);
+}
+
+.resultsTable tbody tr:hover {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(139, 92, 246, 0.2);
+}
+
+.resultsTable td {
+    padding: 16px 12px;
+    font-size: 0.9rem;
+    color: #374151;
+}
+
+.rankCell {
+    text-align: center;
+    font-weight: 700;
+    color: #6B46C1;
+    font-size: 1.1rem;
+    background: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%);
+}
+
+.userNameCell {
+    font-weight: 600;
+    color: #1F2937;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(168, 85, 247, 0.02) 100%);
+}
+
+.scoreCell {
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.score-high {
+    color: #059669;
+    background: rgba(5, 150, 105, 0.1);
+    border-radius: 20px;
+    padding: 6px 12px;
+    box-shadow: 0 2px 8px rgba(5, 150, 105, 0.2);
+}
+
+.score-medium {
+    color: #D97706;
+    background: rgba(217, 119, 6, 0.1);
+    border-radius: 20px;
+    padding: 6px 12px;
+    box-shadow: 0 2px 8px rgba(217, 119, 6, 0.2);
+}
+
+.score-low {
+    color: #DC2626;
+    background: rgba(220, 38, 38, 0.1);
+    border-radius: 20px;
+    padding: 6px 12px;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+}
+
+.rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    font-weight: 700;
+    color: white;
+    font-size: 1rem;
+}
+
+.rank-1 {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+}
+
+.rank-2 {
+    background: linear-gradient(135deg, #C0C0C0, #E8E8E8);
+    color: #666;
+    box-shadow: 0 4px 15px rgba(192, 192, 192, 0.4);
+}
+
+.rank-3 {
+    background: linear-gradient(135deg, #CD7F32, #DAA520);
+    box-shadow: 0 4px 15px rgba(205, 127, 50, 0.4);
+}
+
+.footer {
+    background: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%);
+    padding: 25px;
+    text-align: center;
+    color: #6B46C1;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-top: 2px solid rgba(139, 92, 246, 0.2);
+}
+
+@media (max-width: 1024px) {
+    .contentWrapper {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .charts-section {
+        order: -1;
+    }
+
+    .chart-container {
+        display: inline-block;
+        width: 48%;
+        margin-right: 4%;
+        vertical-align: top;
+    }
+
+    .chart-container:nth-child(even) {
+        margin-right: 0;
+    }
+
+    .back-button {
+        position: static;
+        transform: none;
+        margin-bottom: 15px;
+        display: inline-flex;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .container {
+        border-radius: 12px;
+    }
+
+    .header {
+        padding: 20px;
+    }
+
+    .test-title {
+        font-size: 1.6rem;
+    }
+
+    .contentWrapper {
+        padding: 20px;
+    }
+
+    .chart-container {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    /* .resultsTable {
+        min-width: 600px;
+    } */
+
+    .resultsTable th,
+    .resultsTable td {
+        padding: 12px 8px;
+        font-size: 0.8rem;
+    }
+}
